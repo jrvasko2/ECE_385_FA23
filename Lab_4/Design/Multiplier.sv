@@ -7,8 +7,6 @@
 
 module Multiplier (input logic   Clk,     // Internal
                                 Reset,   // Push button 0
-                                LoadA,   // Push button 1
-                                LoadB,   // Push button 2
                                 Execute, // Push button 3
                   input  logic [7:0]  Din,     // input data
                   input  logic [2:0]  F,       // Function select 
@@ -49,29 +47,15 @@ module Multiplier (input logic   Clk,     // Internal
                         .A(A),
                         .B(B) );
                         
-    compute          compute_unit (
-								.F(F_S),
-                        .A_In(opA),
-                        .B_In(opB),
-                        .A_Out(bitA),
-                        .B_Out(bitB),
-                        .F_A_B );
-    router           router (
-								.R(R_S),
-                        .A_In(bitA),
-                        .B_In(bitB),
-                        .A_Out(newA),
-                        .B_Out(newB),
-                        .F_A_B );
 	 control          control_unit (
                         .Clk(Clk),
                         .Reset(Reset_SH),
-                        .LoadA(LoadA_SH),
-                        .LoadB(LoadB_SH),
                         .Execute(Execute_SH),
+                        .Add()
                         .Shift_En,
-                        .Ld_A,
-                        .Ld_B );
+                        .Ld_B,
+                        .Clear_A(),
+                        .Subtract() );
                      
  	 //When you extend to 8-bits, you will need more HEX drivers to view upper nibble of registers, for now set to 0
      HexDriver HexA(
