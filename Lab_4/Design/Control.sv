@@ -1,7 +1,7 @@
 //Two-always example for state machine
 
 module control (input  logic Clk, Reset, Execute, Add,
-                output logic Shift_En, Ld_B, Clear_A, Subtract );
+                output logic Shift_En, Ld_B, Clear_A, Subtract, InAdd );
 
     // Declare signals curr_state, next_state of type enum
     // with enum values of A, B, ..., F as the state values
@@ -77,6 +77,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Clear_A = Reset;
                 Shift_En = 1'b0;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 	   	   Prep: 
 		      begin
@@ -84,6 +85,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Ld_B = 1'b0;
                 Shift_En = 1'b0;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 		   Shift1:
 		      begin
@@ -91,6 +93,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Ld_B = 1'b0;
                 Shift_En = 1'b1;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 		   Shift2:
 		      begin
@@ -98,6 +101,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Ld_B = 1'b0;
                 Shift_En = 1'b1;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 		   Shift3:
 		      begin
@@ -105,6 +109,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Ld_B = 1'b0;
                 Shift_En = 1'b1;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 		   Shift4:
 		      begin
@@ -112,6 +117,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Ld_B = 1'b0;
                 Shift_En = 1'b1;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 		   Shift5:
 		      begin
@@ -119,6 +125,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Ld_B = 1'b0;
                 Shift_En = 1'b1;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 		   Shift6:
 		      begin
@@ -126,6 +133,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Ld_B = 1'b0;
                 Shift_En = 1'b1;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 		   Shift7:
 		      begin
@@ -133,6 +141,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Ld_B = 1'b0;
                 Shift_En = 1'b1;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 		   Shift8:
 		      begin
@@ -140,6 +149,7 @@ module control (input  logic Clk, Reset, Execute, Add,
                 Ld_B = 1'b0;
                 Shift_En = 1'b1;
                 Subtract = 1'b0;
+                InAdd = 1'b0;
 		      end
 		   Add8:
 		      begin
@@ -147,13 +157,23 @@ module control (input  logic Clk, Reset, Execute, Add,
 		        Ld_B = 1'b0;
 		        Shift_En = 1'b0;
 		        Subtract = Add;
+		        InAdd = 1'b1;
 		      end
-	   	   default:  //default case, applies to Add1-Add7 and Finish
+		   Finish:
+		      begin
+		        Clear_A = 1'b0;
+                Ld_B = 1'b0;
+                Shift_En = 1'b0;
+                Subtract = 1'b0;
+                InAdd = 1'b0;
+		      end
+	   	   default:  //default case, applies to Add1-Add7
 		      begin 
                 Clear_A = 1'b0;
                 Ld_B = 1'b0;
                 Shift_En = 1'b0;
                 Subtract = 1'b0;
+                InAdd = 1'b1;
 		      end
         endcase
     end
