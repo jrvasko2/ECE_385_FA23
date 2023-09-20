@@ -17,14 +17,11 @@ module Multiplier (input logic   Clk,     // Internal
 
 	 //local logic variables go here
 	 logic Reset_Load_Clear_SH, Execute_SH;
-	 logic [2:0] F_S;
-	 logic [1:0] R_S;
-	 logic newA, newB, bitA, bitB, Shift_En,
-	       F_A_B;
+	 logic Shift_En;
 	 logic LSB_A, LSB_B;
 	 logic [7:0] A, B, Din_S;
 	 logic Subtract;
-	 logic [8:0] Jonathan;
+	 logic [8:0] Adder_D;
 	 logic X;
 	 logic InAdd;
 	 logic Clear_A;
@@ -34,20 +31,20 @@ module Multiplier (input logic   Clk,     // Internal
 	 //We can use the "assign" statement to do simple combinational logic
 	 assign Aval = A;
 	 assign Bval = B;
-	 assign LED = {Execute_SH}; //Concatenate is a common operation in HDL
+	 assign LED = X; //Concatenate is a common operation in HDL
 	 
 	 //Instantiation of modules here
 	 register_unit    reg_unit (
                         .Clk(Clk),
                         .Clear(Clear_A),
                         .Ld_A(InAdd), //note these are inferred assignments, because of the existence a logic variable of the same name
-                        .Ld_B,
-                        .Shift_En,
+                        .Ld_B(Ld_B),
+                        .Shift_En(Shift_En),
                         .Switch_D(Din_S),
-                        .Adder_D(Jonathan),
+                        .Adder_D(Adder_D),
                         .A_out(LSB_A),
                         .B_out(LSB_B),
-                        .X,
+                        .X(X),
                         .A(A),
                         .B(B) );
                         
@@ -56,13 +53,13 @@ module Multiplier (input logic   Clk,     // Internal
                         .Reset(Reset_Load_Clear_SH),
                         .Execute(Execute_SH),
                         .Add(LSB_B),
-                        .Shift_En,
-                        .Ld_B,
-                        .Clear_A,
-                        .Subtract,
-                        .InAdd );
+                        .Shift_En(Shift_En),
+                        .Ld_B(Ld_B),
+                        .Clear_A(Clear_A),
+                        .Subtract(Subtract),
+                        .InAdd(InAdd) );
                         
-      Adder9 a(.A, .D(Din_S), .X, .Subtract, .S(Jonathan));
+      Adder9 a(.A(A), .D(Din_S), .X(X), .Subtract(Subtract), .S(Adder_D));
                      
  	 //When you extend to 8-bits, you will need more HEX drivers to view upper nibble of registers, for now set to 0
      HexDriver HexA(
