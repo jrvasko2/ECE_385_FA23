@@ -25,6 +25,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports {hex_seg[2]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {hex_seg[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {hex_seg[0]}]
 set_property IOSTANDARD LVCMOS33 [get_ports LED]
+set_property IOSTANDARD LVCMOS33 [get_ports InHalt]
 set_property IOSTANDARD LVCMOS33 [get_ports Clk]
 set_property IOSTANDARD LVCMOS33 [get_ports Execute]
 set_property IOSTANDARD LVCMOS33 [get_ports Reset_Load_Clear]
@@ -33,7 +34,7 @@ set_property PACKAGE_PIN F2 [get_ports {Din[1]}]
 set_property PACKAGE_PIN F1 [get_ports {Din[2]}]
 set_property PACKAGE_PIN E2 [get_ports {Din[3]}]
 set_property PACKAGE_PIN N15 [get_ports Clk]
-set_property PACKAGE_PIN J1 [get_ports Execute]
+set_property PACKAGE_PIN H2 [get_ports Execute]
 set_property PACKAGE_PIN J2 [get_ports Reset_Load_Clear]
 set_property PACKAGE_PIN G6 [get_ports {hex_grid[0]}]
 set_property PACKAGE_PIN H6 [get_ports {hex_grid[1]}]
@@ -56,6 +57,7 @@ set_property PACKAGE_PIN B18 [get_ports {Aval[1]}]
 set_property PACKAGE_PIN A17 [get_ports {Aval[2]}]
 set_property PACKAGE_PIN B17 [get_ports {Aval[3]}]
 set_property PACKAGE_PIN C9 [get_ports LED]
+set_property PACKAGE_PIN B11 [get_ports InHalt]
 
 
 set_property PACKAGE_PIN C18 [get_ports {Aval[4]}]
@@ -82,6 +84,7 @@ set_property PACKAGE_PIN E1 [get_ports {Din[4]}]
 set_property PACKAGE_PIN D2 [get_ports {Din[5]}]
 set_property PACKAGE_PIN D1 [get_ports {Din[6]}]
 set_property PACKAGE_PIN C2 [get_ports {Din[7]}]
+
 
 
 

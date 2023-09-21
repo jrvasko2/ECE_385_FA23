@@ -28,12 +28,12 @@ end
 initial begin : TEST_VECTORS
 //-7 = f9, 7 = 7, 59 = 3b, -59=C5
 //413 = 019d, -413 = fe63
-Din =  8'hf9;
+Din =  8'h07;
 Reset_Load_Clear = 0;
 Execute = 0;
 #5 Reset_Load_Clear = 1;
 #5 Reset_Load_Clear = 0;
-Din = 8'hc5;
+Din = 8'hFF;
 #5 Execute = 1;
 #5 Execute = 0;
 end
