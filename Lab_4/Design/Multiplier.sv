@@ -9,7 +9,7 @@ module Multiplier (input logic   Clk,     // Internal
                                 Reset_Load_Clear,   // Push button 0
                                 Execute,   // Push button 1
                   input  logic [7:0]  Din,     // input data
-                  output LED, InHalt,
+                  output LED,
                   output logic [7:0]  Aval,    // DEBUG
                                 Bval,    // DEBUG
                   output logic [7:0] hex_seg, // Hex display control
@@ -57,8 +57,8 @@ module Multiplier (input logic   Clk,     // Internal
                         .Ld_B(Ld_B),
                         .Clear_A(Clear_A),
                         .Subtract(Subtract),
-                        .InAdd(InAdd),
-                        .InHalt(InHalt) );
+                        .InAdd(InAdd)
+                        );
                         
       Adder9 a(.A(A), .D(Din_S), .X(X), .Subtract(Subtract), .S(Adder_D));
                      
