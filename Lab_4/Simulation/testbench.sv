@@ -8,9 +8,8 @@ timeprecision 1ns;
 logic Clk, Reset_Load_Clear
 , Execute;
 logic [7:0]  Din;
-logic LED;
-logic [7:0]  Aval,
- Bval;
+logic [8:0]  Aval;
+ logic [7:0] Bval;
 logic [7:0] hex_seg;
 logic [3:0] hex_grid;
 
@@ -28,12 +27,12 @@ end
 initial begin : TEST_VECTORS
 //-7 = f9, 7 = 7, 59 = 3b, -59=C5
 //413 = 019d, -413 = fe63
-Din =  8'h07;
-Reset_Load_Clear = 0;
+Din =  8'h8c;
+Reset_Load_Clear = 0s;
 Execute = 0;
 #5 Reset_Load_Clear = 1;
 #5 Reset_Load_Clear = 0;
-Din = 8'hFF;
+Din = 8'h74;
 #5 Execute = 1;
 #5 Execute = 0;
 end
