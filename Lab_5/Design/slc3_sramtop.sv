@@ -18,7 +18,7 @@ sync button_sync[1:0] (Clk, {Run, Continue}, {RUN_S, CONTINUE_S});
 // Declaration of push button active high signals	
 logic Reset_ah, Continue_ah, Run_ah;
 logic [15:0] Data_from_SRAM, Data_to_SRAM, init_data, Data_from_CPU;
-logic [15:0] ADDR, init_ADDR, ADDR_from_CPU ;
+logic [15:0] ADDR, init_ADDR, ADDR_from_CPU, IR;
 logic OE, WE;
 logic we_select, we_from_ISDU;
 logic oe_from_ISDU;

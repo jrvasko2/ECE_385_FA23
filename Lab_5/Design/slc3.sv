@@ -22,7 +22,7 @@
 module slc3(
 	input logic [15:0] SW,
 	input logic	Clk, Reset, Run, Continue,
-	output logic [15:0] LED,
+	output logic [15:0] LED, IR, //WE CANT LEAVE THIS OR WELL DIE
 	input logic [15:0] Data_from_SRAM,
 	output logic OE, WE,
 	output logic [7:0] hex_seg,
@@ -40,7 +40,7 @@ logic SR2MUX, ADDR1MUX, MARMUX;
 logic BEN, MIO_EN, DRMUX, SR1MUX;
 logic [1:0] PCMUX, ADDR2MUX, ALUK;
 logic [15:0] MDR_In;
-logic [15:0] MAR, MDR, IR;
+logic [15:0] MAR, MDR;
 logic [3:0] hex_4[3:0]; 
 
 // PC Intermediate variable

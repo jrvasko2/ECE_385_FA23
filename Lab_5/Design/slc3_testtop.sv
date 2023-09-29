@@ -4,7 +4,7 @@
 module slc3_testtop(
 	input logic [15:0] SW,
 	input logic	Clk, Reset,Run, Continue,
-	output logic [15:0] LED,
+	output logic [15:0] LED, IR,
 	output logic [7:0] hex_seg,
 	output logic [3:0] hex_grid,
 	output logic [7:0] hex_segB,
