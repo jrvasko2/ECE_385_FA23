@@ -19,10 +19,11 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module mux16(
-    input select,
-    input [15:0] A, B,
-    output logic [15:0] Q
+module mux16
+    #(parameter width = 16)
+    (input select,
+    input [width - 1:0] A, B,
+    output logic [width - 1:0] Q
     );
     
     always_comb
