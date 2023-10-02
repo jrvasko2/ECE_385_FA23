@@ -9,9 +9,8 @@ module Multiplier (input logic   Clk,     // Internal
                                 Reset_Load_Clear,   // Push button 0
                                 Execute,   // Push button 1
                   input  logic [7:0]  Din,     // input data
-                  output LED,
-                  output logic [7:0]  Aval,    // DEBUG
-                                Bval,    // DEBUG
+                  output logic [8:0] Aval,    // DEBUG
+                  output logic [7:0] Bval,    // DEBUG
                   output logic [7:0] hex_seg, // Hex display control
                   output logic [3:0] hex_grid); // Hex display control
 
@@ -19,7 +18,8 @@ module Multiplier (input logic   Clk,     // Internal
 	 logic Reset_Load_Clear_SH, Execute_SH;
 	 logic Shift_En;
 	 logic LSB_A, LSB_B;
-	 logic [7:0] A, B, Din_S;
+	 logic [8:0] A;
+	 logic [7:0] B, Din_S;
 	 logic Subtract;
 	 logic [8:0] Adder_D;
 	 logic InAdd;
@@ -30,7 +30,6 @@ module Multiplier (input logic   Clk,     // Internal
 	 //We can use the "assign" statement to do simple combinational logic
 	 assign Aval = A;
 	 assign Bval = B;
-	 assign LED = A[7]; //Concatenate is a common operation in HDL
 	 
 	 //Instantiation of modules here
 	 register_unit    reg_unit (
@@ -58,7 +57,7 @@ module Multiplier (input logic   Clk,     // Internal
                         .InAdd(InAdd)
                         );
                         
-      Adder9 a(.A(A), .D(Din_S), .X(A[7]), .Subtract(Subtract), .S(Adder_D));
+      Adder9 a(.A(A), .D(Din_S), .Subtract(Subtract), .S(Adder_D));
                      
  	 //When you extend to 8-bits, you will need more HEX drivers to view upper nibble of registers, for now set to 0
      HexDriver HexA(
