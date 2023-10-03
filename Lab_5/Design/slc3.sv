@@ -69,7 +69,7 @@ HexDriver HexA (
 HexDriver HexB (
     .clk(Clk),
     .reset(Reset),
-    .in({IR[15:12], IR[11:8], IR[7:4], IR[3:0]}),
+    .in({PC[15:12], PC[11:8], PC[7:4], PC[3:0]}),
     .hex_seg(hex_segB),
     .hex_grid(hex_gridB)
 );
@@ -79,6 +79,9 @@ HexDriver HexB (
 //	input into MDR)
 assign ADDR = MAR; 
 assign MIO_EN = OE;
+
+//assign LED = IR
+assign LED = IR;
 
 //CC LOGIC
 assign CC_in[2] = BUS[15];
