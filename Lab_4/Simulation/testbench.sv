@@ -32,7 +32,7 @@ Reset_Load_Clear = 0s;
 Execute = 0;
 #5 Reset_Load_Clear = 1;
 #5 Reset_Load_Clear = 0;
-Din = 8'h74;
+Din = 8'h8c;
 #5 Execute = 1;
 #5 Execute = 0;
 end
