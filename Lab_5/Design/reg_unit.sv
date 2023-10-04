@@ -13,14 +13,14 @@ module reg_unit(
     always_comb
     begin
         unique case(DR_select)
-            3'b000  : load_signals = 8'b00000001;
-            3'b001  : load_signals = 8'b00000010;
-            3'b010  : load_signals = 8'b00000100;
-            3'b011  : load_signals = 8'b00001000;
-            3'b100  : load_signals = 8'b00010000;
-            3'b101  : load_signals = 8'b00100000;
-            3'b110  : load_signals = 8'b01000000;
-            3'b111  : load_signals = 8'b10000000;
+            3'b000  : load_signals = 8'b00000001 & {8{load}};
+            3'b001  : load_signals = 8'b00000010 & {8{load}};
+            3'b010  : load_signals = 8'b00000100 & {8{load}};
+            3'b011  : load_signals = 8'b00001000 & {8{load}};
+            3'b100  : load_signals = 8'b00010000 & {8{load}};
+            3'b101  : load_signals = 8'b00100000 & {8{load}};
+            3'b110  : load_signals = 8'b01000000 & {8{load}};
+            3'b111  : load_signals = 8'b10000000 & {8{load}};
         endcase
         unique case(SR1_select)
             3'b000  : SR1 = R0_data;

@@ -114,7 +114,7 @@ mux16 #(3) SR1_MUX(.select(SR1MUX), .A(IR[11:9]), .B(IR[8:6]), .Q(SR1_select));
 //DRMUX
 mux16 #(3) DR_MUX(.select(DRMUX), .A(3'b111), .B(IR[11:9]), .Q(DR_select));
 //SR2MUX
-mux16 SR2_MUX(.select(SR2MUX), .A({{11{IR[4]}}, IR[4:0]}), .B(SR2), .Q(SR2_mux_out));
+mux16 SR2_MUX(.select(SR2MUX), .A(SR2), .B({{11{IR[4]}}, IR[4:0]}), .Q(SR2_mux_out));
 //ADDR1MUX
 mux16 ADDR1_MUX(.select(ADDR1MUX), .A(PC), .B(SR1), .Q(ADDR1_mux_out));
 //ADDR2MUX

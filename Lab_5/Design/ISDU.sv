@@ -211,11 +211,17 @@ module ISDU (   input logic         Clk,
 					Mem_WE = 1'b0;
 				end
 
-			S_33_1, S_33_2, S_33_3 : //You may have to think about this as well to adapt to RAM with wait-states
-				begin
+			S_33_1, S_33_2 :
+			    begin
 					Mem_OE = 1'b1;
-					LD_MDR = 1'b1;
+					//LD_MDR = 1'b1;
 				end
+		    S_33_3 :
+		        begin
+		            Mem_OE = 1'b1;
+		            LD_MDR = 1'b1;
+		        end
+			//S_33_2 : ;//, S_33_3 : //You may have to think about this as well to adapt to RAM with wait-states
 
 			S_35 : 
 				begin
@@ -269,7 +275,12 @@ module ISDU (   input logic         Clk,
 			         LD_MAR = 1'b1;
 			     end
 			     
-		    S_25_1, S_25_2, S_25_3 :
+		    S_25_1, S_25_2 :
+		         begin
+			         Mem_OE = 1'b1;
+					 //LD_MDR = 1'b1;
+			     end
+			S_25_3 :
 		         begin
 			         Mem_OE = 1'b1;
 					 LD_MDR = 1'b1;
@@ -295,14 +306,16 @@ module ISDU (   input logic         Clk,
 			S_23  :
 			     begin
 			         LD_MDR = 1'b1;
-			         GateMDR = 1'b1;
 			         ALUK = 2'b11;
 			         GateALU = 1'b1;
+			         //Mem_OE = 1'b1;
 			     end
 			
-			S_16_1, S_16_2, S_16_3:
+			S_16_1, S_16_2, S_16_3 :
 			     begin
+			         LD_MDR = 1'b0;
 			         Mem_WE = 1'b1;
+			         Mem_OE = 1'b1;
 			     end
 			     
 			S_00 : ;
