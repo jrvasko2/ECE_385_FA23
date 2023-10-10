@@ -11,27 +11,32 @@
 #include <stdio.h>
 #include <xparameters.h>
 #include <xil_types.h>
-#include <sleep.h>
 
 #include "platform.h"
 
-volatile uint32_t* led_gpio_data = <find the base address>;  //Hint: either find the manual address (via the memory map in the block diagram, or
+volatile uint32_t* led_gpio_data = XPAR_AXI_GPIO_0_BASEADDR;  //Hint: either find the manual address (via the memory map in the block diagram, or
 															 //replace with the proper define in xparameters (part of the BSP). Either way
 															 //this is the base address of the GPIO corresponding to your LEDs
 															 //(similar to 0xFFFF from MEM2IO from previous labs).
+volatile uint32_t* sw_gpio_data = XPAR_AXI_GPIO_1_BASEADDR;
+volatile uint32_t* cum_gpio_data = XPAR_AXI_GPIO_2_BASEADDR;
 
 int main()
 {
     init_platform();
+    int total = 0;
 
-	while (1+1 != 3)
+	while (1)
 	{
-		sleep(1);
-		*led_gpio_data |=  0x00000001;
-		printf("Led On!\r\n");
-		sleep(1);
-		*led_gpio_data &= ~0x00000001; //blinks LED
-		printf("Led Off!\r\n");
+		if (*cum_gpio_data) {
+			total = total + (int) (*sw_gpio_data);
+			if (total > 65535) {
+				total = 0;
+				printf("Overflow, total set back to 0\r\n");
+			}
+			*led_gpio_data = (uint32_t) total;
+			while (*cum_gpio_data) {}
+		}
 	}
 
     cleanup_platform();
