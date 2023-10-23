@@ -14,6 +14,9 @@ module hdmi_text_controller_v1_0 #
 )
 (
     // Users to add ports here
+    
+    output logic [7:0] hex_segA, hex_segB,
+    output logic [3:0] hex_gridA, hex_gridB,
    
     //given ports
     output wire hdmi_clk_n,
@@ -97,6 +100,23 @@ hdmi_text_controller_v1_0_AXI # (
 //top-level from the previous lab. You should get the IP to generate a valid HDMI signal (e.g. blue screen or gradient)
 //prior to working on the text drawing    
        
+    // Hex Drivers for debugging
+    HexDriver HexA (
+    .clk(clk_100MHz),
+    .reset(reset_ah),
+    .in({4'b0010, 4'b1001, 4'b1101, 4'b1110}),
+    .hex_seg(hex_segA),
+    .hex_grid(hex_gridA)
+    );
+    
+    HexDriver HexB (
+    .clk(clk_100MHz),
+    .reset(reset_ah),
+    .in({4'b1010, 4'b1101, 4'b1001, 4'b1010}),
+    .hex_seg(hex_segB),
+    .hex_grid(hex_gridB)
+    );
+    
     //clock wizard configured with a 1x and 5x clock for HDMI
     clk_wiz_0 clk_wiz (
         .clk_out1(clk_125MHz),
