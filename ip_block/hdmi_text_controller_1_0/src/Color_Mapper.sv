@@ -14,10 +14,10 @@
 //-------------------------------------------------------------------------
 
 
-module  color_mapper ( input  logic [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
+module  color_mapper ( input  logic [9:0] DrawX, DrawY,
+                       input logic [7:0] code,
+                       input logic [31:0] control,
                        output logic [3:0]  Red, Green, Blue );
-    
-    logic ball_on;
 	 
  /* Old Ball: Generated square box by checking if the current pixel is within a square of length
     2*BallS, centered at (BallX, BallY).  Note that this requires unsigned comparisons.
@@ -33,30 +33,32 @@ module  color_mapper ( input  logic [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
      of the 120 available multipliers on the chip!  Since the multiplicants are required to be signed,
 	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
 	  
-    int DistX, DistY, Size;
-    assign DistX = DrawX - BallX;
-    assign DistY = DrawY - BallY;
-    assign Size = Ball_size;
+	logic [10:0] sprite_addr;
+	logic [7:0] sprite_data;
+	logic [7:0] backwards;
+	
+	font_rom fr(
+        .addr(sprite_addr),
+        .data(sprite_data)
+    );
   
     always_comb
     begin:Ball_on_proc
-        if ( (DistX*DistX + DistY*DistY) <= (Size * Size) )
-            ball_on = 1'b1;
-        else 
-            ball_on = 1'b0;
+        sprite_addr = code[6:0] << 4 + (DrawY & 10'b0000001111);
      end 
        
     always_comb
     begin:RGB_Display
-        if ((ball_on == 1'b1)) begin 
-            Red = 4'hf;
-            Green = 4'h7;
-            Blue = 4'h0;
-        end       
+        backwards = {sprite_data[0], sprite_data[1], sprite_data[2], sprite_data[3], sprite_data[4], sprite_data[5], sprite_data[6], sprite_data[7]};
+        if ((backwards[DrawX & 10'b0000000111] == 1'b1 && code[7] == 1'b0) || (backwards[DrawX & 10'b0000000111] == 1'b0 && code[7] == 1'b1)) begin 
+            Red = control[24:21];
+            Green = control[20:17];
+            Blue = control[16:13];
+        end
         else begin 
-            Red = 4'hf - DrawX[9:6]; 
-            Green = 4'hf - DrawX[9:6];
-            Blue = 4'hf - DrawX[9:6];
+            Red = control[12:9]; 
+            Green = control[8:5];
+            Blue = control[4:1];
         end      
     end 
     

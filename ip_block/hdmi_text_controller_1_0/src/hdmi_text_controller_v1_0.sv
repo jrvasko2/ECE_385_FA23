@@ -10,13 +10,11 @@ module hdmi_text_controller_v1_0 #
 
     // Parameters of Axi Slave Bus Interface S00_AXI
     parameter integer C_AXI_DATA_WIDTH    = 32,
-    parameter integer C_AXI_ADDR_WIDTH    = 11 //note that we changed this from 4 in the provided template
+    parameter integer C_AXI_ADDR_WIDTH    = 12 //note that we changed this from 4 in the provided template
 )
 (
     // Users to add ports here
     
-    output logic [7:0] hex_segA, hex_segB,
-    output logic [3:0] hex_gridA, hex_gridB,
    
     //given ports
     output wire hdmi_clk_n,
@@ -55,18 +53,20 @@ module hdmi_text_controller_v1_0 #
 //additional logic variables as necessary to support VGA, and HDMI modules.
 logic clk_25MHz, clk_125MHz, clk_100MHz;
 logic locked;
-logic [9:0] drawX, drawY, ballxsig, ballysig, ballsizesig;
+logic [9:0] drawX, drawY;
 
 logic hsync, vsync, vde;
 logic [3:0] red, green, blue;
+
+logic [C_AXI_DATA_WIDTH - 1:0] dataout;
+logic [C_AXI_ADDR_WIDTH - 3:0] addrin;
+logic [7:0] code;
+logic [C_AXI_DATA_WIDTH - 1:0] control;
 
 logic reset_ah;
 assign reset_ah = axi_aresetn;
 assign clk_100MHz = axi_aclk;
 
-assign ballxsig = 200;
-assign ballysig = 300;
-assign ballsizesig = 40;
 // Instantiation of Axi Bus Interface AXI
 hdmi_text_controller_v1_0_AXI # (
     .C_S_AXI_DATA_WIDTH(C_AXI_DATA_WIDTH),
@@ -92,36 +92,22 @@ hdmi_text_controller_v1_0_AXI # (
     .S_AXI_RDATA(axi_rdata),
     .S_AXI_RRESP(axi_rresp),
     .S_AXI_RVALID(axi_rvalid),
-    .S_AXI_RREADY(axi_rready)
+    .S_AXI_RREADY(axi_rready),
+    .addrin(addrin),
+    .dataout(dataout),
+    .control(control)
 );
 
 
 //Instiante clocking wizard, VGA sync generator modules, and VGA-HDMI IP here. For a hint, refer to the provided
 //top-level from the previous lab. You should get the IP to generate a valid HDMI signal (e.g. blue screen or gradient)
 //prior to working on the text drawing    
-       
-    // Hex Drivers for debugging
-    HexDriver HexA (
-    .clk(clk_100MHz),
-    .reset(reset_ah),
-    .in({4'b0010, 4'b1001, 4'b1101, 4'b1110}),
-    .hex_seg(hex_segA),
-    .hex_grid(hex_gridA)
-    );
-    
-    HexDriver HexB (
-    .clk(clk_100MHz),
-    .reset(reset_ah),
-    .in({4'b1010, 4'b1101, 4'b1001, 4'b1010}),
-    .hex_seg(hex_segB),
-    .hex_grid(hex_gridB)
-    );
     
     //clock wizard configured with a 1x and 5x clock for HDMI
     clk_wiz_0 clk_wiz (
         .clk_out1(clk_125MHz),
         .clk_out2(clk_25MHz),
-        .reset(reset_ah),
+        .reset(~reset_ah),
         .locked(locked),
         .clk_in1(clk_100MHz)
     );
@@ -129,7 +115,7 @@ hdmi_text_controller_v1_0_AXI # (
     //VGA Sync signal generator
     vga_controller vga (
         .pixel_clk(clk_25MHz),
-        .reset(reset_ah),
+        .reset(~reset_ah),
         .hs(hsync),
         .vs(vsync),
         .active_nblank(vde),
@@ -144,7 +130,7 @@ hdmi_text_controller_v1_0_AXI # (
         .pix_clkx5(clk_125MHz),
         .pix_clk_locked(locked),
         //Reset is active LOW
-        .rst(reset_ah),
+        .rst(~reset_ah),
         //Color and Sync Signals
         .red(red),
         .green(green),
@@ -170,13 +156,33 @@ hdmi_text_controller_v1_0_AXI # (
     color_mapper color_instance(
         .DrawX(drawX),
         .DrawY(drawY),
-        .BallX(ballxsig),
-        .BallY(ballysig),
-        .Ball_size(ballsizesig),
+        .code(code),
+        .control(control),
         .Red(red),
         .Green(green),
         .Blue(blue)
     );
+    
+    int word, chartemp, char;
+    //int charsbefore;
+    
+    always_comb
+    begin
+        chartemp = (drawX >> 3) + (drawY >> 4) * 80;
+        word = chartemp >> 2;
+        char = (drawX & 10'b0000011111) >> 3;
+        //charsbefore = word << 2;
+        //char = chartemp - charsbefore;
+        addrin = word;
+        if (char == 0)
+            code = dataout[7:0];
+        else if (char == 1)
+            code = dataout[15:8];
+        else if (char == 2)
+            code = dataout[23:16];
+        else
+            code = dataout[31:24];
+    end
 
 // User logic ends
 

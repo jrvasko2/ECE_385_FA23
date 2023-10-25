@@ -27,6 +27,7 @@
 module hdmi_text_controller_v1_0_AXI #
 (
     // Users to add parameters here
+    parameter integer reg_number = 601,
 
     // User parameters ends
     // Do not modify the parameters beyond this line
@@ -34,10 +35,13 @@ module hdmi_text_controller_v1_0_AXI #
     // Width of S_AXI data bus
     parameter integer C_S_AXI_DATA_WIDTH	= 32,
     // Width of S_AXI address bus
-    parameter integer C_S_AXI_ADDR_WIDTH	= 11
+    parameter integer C_S_AXI_ADDR_WIDTH	= 12
 )
 (
     // Users to add ports here
+    input logic [C_S_AXI_ADDR_WIDTH - 3:0] addrin,
+    output logic [C_S_AXI_DATA_WIDTH - 1:0] dataout,
+    output logic [C_S_AXI_DATA_WIDTH - 1:0] control,
 
     // User ports ends
     // Do not modify the ports beyond this line
@@ -122,7 +126,7 @@ logic  	axi_rvalid;
 // ADDR_LSB = 2 for 32 bits (n downto 2)
 // ADDR_LSB = 3 for 64 bits (n downto 3)
 localparam integer ADDR_LSB = (C_S_AXI_DATA_WIDTH/32) + 1;
-localparam integer OPT_MEM_ADDR_BITS = 1;
+localparam integer OPT_MEM_ADDR_BITS = 9;
 //----------------------------------------------
 //-- Signals for user logic register space example
 //------------------------------------------------
@@ -135,7 +139,7 @@ localparam integer OPT_MEM_ADDR_BITS = 1;
 //Note: the provided Verilog template had the registered declared as above, but in order to give 
 //students a hint we have replaced the 4 individual registers with an unpacked array of packed logic. 
 //Note that you as the student will still need to extend this to the full register set needed for the lab.
-logic [C_S_AXI_DATA_WIDTH-1:0] slv_regs[4];
+logic [C_S_AXI_DATA_WIDTH-1:0] slv_regs[reg_number];
 logic	 slv_reg_rden;
 logic	 slv_reg_wren;
 logic [C_S_AXI_DATA_WIDTH-1:0]	 reg_data_out;
@@ -248,7 +252,7 @@ always_ff @( posedge S_AXI_ACLK )
 begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
-        for (integer i = 0; i < 2**C_S_AXI_ADDR_WIDTH; i++)
+        for (integer i = 0; i < reg_number * 4; i++)
         begin
            slv_regs[i] <= 0;
         end
@@ -390,6 +394,8 @@ begin
 end    
 
 // Add user logic here
+assign dataout = slv_regs[addrin];
+assign control = slv_regs['d600];
 
 // User logic ends
 
