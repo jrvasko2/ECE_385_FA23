@@ -57,6 +57,7 @@ logic [9:0] drawX, drawY;
 
 logic hsync, vsync, vde;
 logic [3:0] red, green, blue;
+logic [3:0] redout, greenout, blueout;
 
 logic [C_AXI_DATA_WIDTH - 1:0] dataout;
 logic [C_AXI_ADDR_WIDTH - 3:0] addrin;
@@ -132,9 +133,9 @@ hdmi_text_controller_v1_0_AXI # (
         //Reset is active LOW
         .rst(~reset_ah),
         //Color and Sync Signals
-        .red(red),
-        .green(green),
-        .blue(blue),
+        .red(redout),
+        .green(greenout),
+        .blue(blueout),
         .hsync(hsync),
         .vsync(vsync),
         .vde(vde),
@@ -161,6 +162,28 @@ hdmi_text_controller_v1_0_AXI # (
         .Red(red),
         .Green(green),
         .Blue(blue)
+    );
+    
+    reg_16 #(4) redreg(
+        .Clk(clk_25MHz),
+        .Reset(reset_ah),
+        .Load(1'b1),
+        .D(red),
+        .Data_Out(redout)
+    );
+    reg_16 #(4) greenreg(
+        .Clk(clk_25MHz),
+        .Reset(reset_ah),
+        .Load(1'b1),
+        .D(green),
+        .Data_Out(greenout)
+    );
+    reg_16 #(4) bluereg(
+        .Clk(clk_25MHz),
+        .Reset(reset_ah),
+        .Load(1'b1),
+        .D(blue),
+        .Data_Out(blueout)
     );
     
     int word, chartemp, char;
