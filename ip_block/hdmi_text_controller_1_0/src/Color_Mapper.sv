@@ -44,13 +44,13 @@ module  color_mapper ( input  logic [9:0] DrawX, DrawY,
   
     always_comb
     begin:Ball_on_proc
-        sprite_addr = code[6:0] << 4 + (DrawY & 10'b0000001111);
+        sprite_addr = (code[6:0] * 16) + (DrawY % 16);
      end 
        
     always_comb
     begin:RGB_Display
         backwards = {sprite_data[0], sprite_data[1], sprite_data[2], sprite_data[3], sprite_data[4], sprite_data[5], sprite_data[6], sprite_data[7]};
-        if ((backwards[DrawX & 10'b0000000111] == 1'b1 && code[7] == 1'b0) || (backwards[DrawX & 10'b0000000111] == 1'b0 && code[7] == 1'b1)) begin 
+        if ((backwards[DrawX % 8] == 1'b1 && code[7] == 1'b0) || (backwards[DrawX % 8] == 1'b0 && code[7] == 1'b1)) begin 
             Red = control[24:21];
             Green = control[20:17];
             Blue = control[16:13];

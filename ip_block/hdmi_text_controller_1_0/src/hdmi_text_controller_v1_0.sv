@@ -164,38 +164,38 @@ hdmi_text_controller_v1_0_AXI # (
         .Blue(blue)
     );
     
-    reg_16 #(4) redreg(
+   reg_16 #(4) redreg(
         .Clk(clk_25MHz),
-        .Reset(reset_ah),
+        .Reset(~reset_ah),
         .Load(1'b1),
         .D(red),
         .Data_Out(redout)
     );
     reg_16 #(4) greenreg(
         .Clk(clk_25MHz),
-        .Reset(reset_ah),
+        .Reset(~reset_ah),
         .Load(1'b1),
         .D(green),
         .Data_Out(greenout)
     );
     reg_16 #(4) bluereg(
         .Clk(clk_25MHz),
-        .Reset(reset_ah),
+        .Reset(~reset_ah),
         .Load(1'b1),
         .D(blue),
         .Data_Out(blueout)
     );
     
     int word, chartemp, char;
-    //int charsbefore;
+    int charsbefore;
     
     always_comb
     begin
-        chartemp = (drawX >> 3) + (drawY >> 4) * 80;
-        word = chartemp >> 2;
-        char = (drawX & 10'b0000011111) >> 3;
-        //charsbefore = word << 2;
-        //char = chartemp - charsbefore;
+        chartemp = (drawX / 8) + ((drawY / 16) * 80);
+        word = chartemp/4;
+        //char = (drawX % 32) >> 3;
+        charsbefore = word * 4;
+        char = chartemp - charsbefore;
         addrin = word;
         if (char == 0)
             code = dataout[7:0];
