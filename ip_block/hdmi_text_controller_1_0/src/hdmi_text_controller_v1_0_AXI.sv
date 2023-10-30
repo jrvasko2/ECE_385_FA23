@@ -27,7 +27,7 @@
 module hdmi_text_controller_v1_0_AXI #
 (
     // Users to add parameters here
-    parameter integer reg_number = 65,
+    parameter integer reg_number = 601,
 
     // User parameters ends
     // Do not modify the parameters beyond this line
@@ -126,7 +126,7 @@ logic  	axi_rvalid;
 // ADDR_LSB = 2 for 32 bits (n downto 2)
 // ADDR_LSB = 3 for 64 bits (n downto 3)
 localparam integer ADDR_LSB = (C_S_AXI_DATA_WIDTH/32) + 1;
-localparam integer OPT_MEM_ADDR_BITS = 6;
+localparam integer OPT_MEM_ADDR_BITS = 9;
 //----------------------------------------------
 //-- Signals for user logic register space example
 //------------------------------------------------
@@ -395,7 +395,7 @@ end
 
 // Add user logic here
 assign dataout = slv_regs[addrin];
-assign control = slv_regs['d64];
+assign control = slv_regs['d600];
 
 // User logic ends
 

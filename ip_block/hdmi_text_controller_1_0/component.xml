@@ -387,7 +387,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>05fcaa74</spirit:value>
+            <spirit:value>8aaa0f95</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -408,7 +408,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>05fcaa74</spirit:value>
+            <spirit:value>8aaa0f95</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -878,10 +878,6 @@
         <spirit:fileType>systemVerilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>src/Reg_16.sv</spirit:name>
-        <spirit:fileType>systemVerilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
         <spirit:name>src/VGA_controller.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
       </spirit:file>
@@ -896,7 +892,7 @@
       <spirit:file>
         <spirit:name>src/hdmi_text_controller_v1_0.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_0f43603d</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_820264c9</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -933,10 +929,6 @@
       </spirit:file>
       <spirit:file>
         <spirit:name>src/Color_Mapper.sv</spirit:name>
-        <spirit:fileType>systemVerilogSource</spirit:fileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>src/Reg_16.sv</spirit:name>
         <spirit:fileType>systemVerilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -1046,14 +1038,14 @@
       <xilinx:xpmLibraries>
         <xilinx:xpmLibrary>XPM_CDC</xilinx:xpmLibrary>
       </xilinx:xpmLibraries>
-      <xilinx:coreRevision>41</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2023-10-26T01:32:48Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>45</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2023-10-26T20:30:01Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2022.2.2</xilinx:xilinxVersion>
+      <xilinx:xilinxVersion>2022.2</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="a151191a"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="60746b78"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="18ea66b1"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="f3cb0226"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="de8b5cc4"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="f7819e12"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="fe424520"/>

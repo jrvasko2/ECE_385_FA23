@@ -49,7 +49,7 @@ module hdmi_text_controller_v1_0 #
 );
 
 //additional logic variables as necessary to support VGA, and HDMI modules.
-logic clk_25MHz, clk_125MHz, clk, clk_100MHz;
+logic clk_25MHz, clk_125MHz;//, clk, clk_100MHz;
 logic locked;
 logic hsync, vsync, vde;
 logic [3:0] red, green, blue;
@@ -59,7 +59,7 @@ logic [9:0] drawX, drawY, ballxsig, ballysig, ballsizesig;
 logic[7:0] hdmi;
 
 assign reset_ah = s_axi_aresetn;
-assign clk_100MHz = s_axi_aclk;
+//assign clk_100MHz = s_axi_aclk;
 
 assign ballxsig = 200;
 assign ballysig = 300;
@@ -104,7 +104,7 @@ clk_wiz_0 clk_wiz (
     .clk_out2(clk_125MHz),
     .reset(reset_ah),
     .locked(locked),
-    .clk_in1(clk_100MHz)
+    .clk_in1(s_axi_aclk)
 );
 
 //VGA Sync signal generator

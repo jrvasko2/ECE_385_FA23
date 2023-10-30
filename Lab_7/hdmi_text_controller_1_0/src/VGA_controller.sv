@@ -49,7 +49,7 @@ module  vga_controller ( input        pixel_clk,        // 50 MHz clock
      
    
 	//Runs the horizontal counter  when it resets vertical counter is incremented
-   always_ff @ (posedge pixel_clk or posedge reset )
+   always_ff @ (posedge pixel_clk ) // or posedge reset
 	begin: counter_proc
 		  if ( reset ) 
 			begin 
@@ -75,7 +75,7 @@ module  vga_controller ( input        pixel_clk,        // 50 MHz clock
    
 	 //horizontal sync pulse is 96 pixels long at pixels 656-752
     //(signal is registered to ensure clean output waveform)
-    always_ff @ (posedge reset or posedge pixel_clk )
+    always_ff @ ( posedge pixel_clk ) // or posedge reset
     begin : hsync_proc
         if ( reset ) 
             hs <= 1'b0;
@@ -88,7 +88,7 @@ module  vga_controller ( input        pixel_clk,        // 50 MHz clock
 	 
     //vertical sync pulse is 2 lines(800 pixels) long at line 490-491
     //(signal is registered to ensure clean output waveform)
-    always_ff @ (posedge reset or posedge pixel_clk )
+    always_ff @ ( posedge pixel_clk ) // or posedge reset
     begin : vsync_proc
         if ( reset ) 
            vs <= 1'b0;
