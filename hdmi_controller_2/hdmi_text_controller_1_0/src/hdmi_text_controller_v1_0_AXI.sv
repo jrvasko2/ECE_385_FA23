@@ -21,7 +21,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
+//use new signals to control combinational logic at end that sets value for outputs
 `timescale 1 ns / 1 ps
 
 module hdmi_text_controller_v1_0_AXI #
@@ -39,10 +39,18 @@ module hdmi_text_controller_v1_0_AXI #
 )
 (
     // Users to add ports here
-    input logic [C_S_AXI_ADDR_WIDTH - 3:0] addrin,
-    output logic [C_S_AXI_DATA_WIDTH - 1:0] dataout,
-    output logic [C_S_AXI_DATA_WIDTH - 1:0] control,
-
+    //input logic [C_S_AXI_ADDR_WIDTH - 3:0] addrin,
+    //output logic [C_S_AXI_DATA_WIDTH - 1:0] dataout,
+    //output logic [C_S_AXI_DATA_WIDTH - 1:0] control,
+    output logic [C_S_AXI_ADDR_WIDTH - 3:0] AddrAW,
+    output logic [C_S_AXI_DATA_WIDTH - 1:0] DinAW,
+    input logic [C_S_AXI_DATA_WIDTH - 1:0] DoutA,
+    output logic ENAW,
+    output logic [(C_S_AXI_DATA_WIDTH / 4) - 1:0] WEAW,
+    output logic ENAR,
+    output logic WEAR,
+    output logic AddrAR,
+    output logic rsta,
     // User ports ends
     // Do not modify the ports beyond this line
 
@@ -139,10 +147,12 @@ localparam integer OPT_MEM_ADDR_BITS = 9;
 //Note: the provided Verilog template had the registered declared as above, but in order to give 
 //students a hint we have replaced the 4 individual registers with an unpacked array of packed logic. 
 //Note that you as the student will still need to extend this to the full register set needed for the lab.
-logic [C_S_AXI_DATA_WIDTH-1:0] slv_regs[reg_number];
+
+//slv_reg is a misnomer here but I'm lazy
 logic	 slv_reg_rden;
+logic comb_write;
+//logic comb_reset;
 logic	 slv_reg_wren;
-logic [C_S_AXI_DATA_WIDTH-1:0]	 reg_data_out;
 integer	 byte_index;
 logic	 aw_en;
 
@@ -252,23 +262,39 @@ always_ff @( posedge S_AXI_ACLK )
 begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
-        for (integer i = 0; i < reg_number * 4; i++)
+        rsta <= 1'b1;
+    
+        /*for (integer i = 0; i < reg_number; i++)
         begin
-           slv_regs[i] <= 0;
-        end
+        //write all zeroes to all memory locations
+           //WEA <= 4'b1111;
+           //ENA <= 1'b1;
+           //DinA <= 32'b0;
+        //not sure if this will work but hopefully it will
+           //AddrA <= i;
+        end*/
     end
-  else begin
-    if (slv_reg_wren)
+  else if (S_AXI_ARESETN == 1'b1 && rsta)
+    begin
+        rsta <= 1'b0;
+    end
+  if (slv_reg_wren)
       begin
-        for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+            //comb_write <= 1;
+      //im pretty sure we just dont need the for loop if byte write works how i think
+        ENAW <= 1'b1;
+        WEAW <= S_AXI_WSTRB;
+        AddrAW <= axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+        DinAW <= S_AXI_WDATA;
+        /*for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
           if ( S_AXI_WSTRB[byte_index] == 1 ) begin
             // Respective byte enables are asserted as per write strobes, note the use of the index part select operator
 			// '+:', you will need to understand how this operator works.
             slv_regs[axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]][(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-          end  
+          end  *//**//*
+          end*/
       end
-  end
-end    
+end
 
 // Implement write response logic generation
 // The write response and response valid signals are asserted by the slave 
@@ -368,11 +394,14 @@ end
 // Slave register read enable is asserted when valid address is available
 // and the slave is ready to accept the read address.
 assign slv_reg_rden = axi_arready & S_AXI_ARVALID & ~axi_rvalid;
+
+//we shouldnt need this but ima just comment it out for now
+/*
 always_comb
 begin
       // Address decoding for reading registers
-     reg_data_out <= slv_regs[axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]];
-end
+     reg_data_out <= DoutA;
+end*/
 
 // Output register or memory read data
 always_ff @( posedge S_AXI_ACLK )
@@ -388,14 +417,47 @@ begin
       // output the read dada 
       if (slv_reg_rden)
         begin
-          axi_rdata <= reg_data_out;     // register read data
+          axi_rdata <= DoutA;     // data from BRAM/palette (should be valid at this point)
         end   
     end
 end    
 
 // Add user logic here
-assign dataout = slv_regs[addrin];
-assign control = slv_regs['d600];
+//write is essentially asynchronous now
+//begin read as soon as address is valid so latency doesn't interfere with read
+always_comb
+begin
+ENAR = 1'b0;
+WEAR = 4'b0;
+AddrAR = 10'b0;
+/*rsta = 1'b0;
+    if (comb_reset == 1'b1)
+        begin
+        *//*for (integer i = 0; i < reg_number; i++)
+        begin
+        //write all zeroes to all memory locations
+           WEA = 4'b1111;
+           ENA = 1'b1;
+           DinA = 32'b0;
+        //not sure if this will work but hopefully it will
+           AddrA = i;
+        end*//*
+        rsta = 1'b1;
+        comb_reset = 1'b0;
+    end*/
+    if (S_AXI_ARVALID == 1'b1)
+        begin
+            ENAR = 1'b1;
+            AddrAR = axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+        end
+    /*if (slv_reg_wren == 1'b1)
+        begin
+            ENA = 1'b1;
+            WEA = S_AXI_WSTRB;
+            AddrA = axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+            DinA = S_AXI_WDATA;
+        end*/
+    end
 
 // User logic ends
 

@@ -58,16 +58,36 @@ logic [9:0] drawX, drawY;
 logic hsync, vsync, vde;
 logic [3:0] red, green, blue;
 
-logic [C_AXI_DATA_WIDTH - 1:0] dataout;
-logic [C_AXI_ADDR_WIDTH - 3:0] addrin;
 logic [7:0] code;
-logic [C_AXI_DATA_WIDTH - 1:0] control;
 
-//MEM2IO
-logic Reset, Clk, OE;
-logic [3:0] WE;
-logic [15:0] Switches, Data_from_CPU, Data_to_CPU, Data_from_SRAM, Data_to_SRAM, ADDR;
-logic [3:0]  HEX0, HEX1, HEX2, HEX3; 
+//palette
+logic [C_AXI_DATA_WIDTH - 1:0] palette;
+integer byte_index;
+
+//these will get passed to BRAM if AXI bus isn't trying to access palette
+logic [C_AXI_ADDR_WIDTH - 3:0] AddrARIM;
+logic ENARIM;
+logic [(C_AXI_DATA_WIDTH / 4) - 1:0] WEARIM;
+logic [C_AXI_ADDR_WIDTH - 3:0] AddrAWIM;
+logic [C_AXI_DATA_WIDTH - 1:0] DinAWIM;
+logic ENAWIM;
+logic [(C_AXI_DATA_WIDTH / 4) - 1:0] WEAWIM;
+
+//this gets passed to BRAM
+logic [C_AXI_DATA_WIDTH - 1:0] DoutAIM;
+//this is what actually gets passed to AXI
+logic [C_AXI_DATA_WIDTH - 1:0] DoutA;
+
+//this is what we actually pass to BRAM
+logic [C_AXI_ADDR_WIDTH - 3:0] AddrA;
+logic [C_AXI_DATA_WIDTH - 1:0] DinA;
+logic ENA;
+logic [(C_AXI_DATA_WIDTH / 4) - 1:0] WEA;
+logic rsta;
+
+//these are inputs for our second port (we are constantly reading from this one)
+logic [C_AXI_ADDR_WIDTH - 3:0] AddrB;
+logic [C_AXI_DATA_WIDTH - 1:0] DoutB;
 
 logic reset_ah;
 assign reset_ah = axi_aresetn;
@@ -99,10 +119,66 @@ hdmi_text_controller_v1_0_AXI # (
     .S_AXI_RRESP(axi_rresp),
     .S_AXI_RVALID(axi_rvalid),
     .S_AXI_RREADY(axi_rready),
-    .addrin(addrin),
-    .dataout(dataout),
-    .control(control)
+    .AddrAW(AddrAWIM),
+    .DinAW(DinAWIM),
+    .DoutA(DoutA),
+    .ENAW(ENAWIM),
+    .WEAW(WEAWIM),
+    .AddrAR(AddrARIM),
+    .ENAR(ENARIM),
+    .WEAR(WEARIM),
+    
+    .rsta(rsta)
 );
+
+
+//bus logic
+always_comb
+    begin
+        //initialize everything to zero to prevent latching
+        AddrA = 0;
+        DinA = 0;
+        ENA = 0;
+        WEA = 0;
+        DoutA = 0;
+        //if we're writing to palette this is like the writes we were doing before
+        if (ENAWIM)
+            begin
+                if (AddrAWIM == 10'b1001011000)
+                begin
+                    for ( byte_index = 0; byte_index <= (C_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+                    if ( WEAWIM[byte_index] == 1 ) 
+                    begin
+                        palette[(byte_index*8) +: 8] = DinAWIM[(byte_index*8) +: 8];
+                    end
+                end
+                else
+                    begin
+                        AddrA = AddrAWIM;
+                        DinA = DinAWIM;
+                        ENA = ENAWIM;
+                        WEA = WEAWIM;
+                        DoutA = DoutAIM;
+                    end
+                end
+        else if (ENARIM)
+            begin
+                if (AddrARIM == 10'b1001011000)
+                    begin
+                    DoutA = palette;
+                    end
+                else
+                    begin
+                        AddrA = AddrARIM;
+                        ENA = ENARIM;
+                        WEA = WEARIM;
+                        DoutA = DoutAIM;
+                    end
+            end
+    end
+    //always reading from port b
+    blk_mem_gen_0 ram0(.addra(AddrA), .clka(Clk), .dina(DinA), .ena(ENA), .wea(WEA), .rsta(rsta), .douta(DoutAIM), 
+                        .addrb(AddrB), .clkb(Clk), .dinb(32'b0), .enb(1'b1), .web(4'b0), .doutb(DoutB));
 
 
 //Instiante clocking wizard, VGA sync generator modules, and VGA-HDMI IP here. For a hint, refer to the provided
@@ -163,16 +239,11 @@ hdmi_text_controller_v1_0_AXI # (
         .DrawX(drawX),
         .DrawY(drawY),
         .code(code),
-        .control(control),
+        .control(palette),
         .Red(red),
         .Green(green),
         .Blue(blue)
     );
-    
-    Mem2IO mio(.*);
-    
-    blk_mem_gen_0 ram0(.addra(ADDR[9:0]), .clka(Clk), .dina(Data_to_SRAM), .ena(OE), .wea(WE), .douta(Data_from_SRAM), 
-                        .addrb(ADDR[9:0]), .clkb(Clk), .dinb(Data_to_SRAM), .enb(OE), .web(WE), .doutb(Data_from_SRAM));
     
     int word, chartemp, char;
     int charsbefore;
@@ -184,15 +255,15 @@ hdmi_text_controller_v1_0_AXI # (
         //char = (drawX % 32) >> 3;
         charsbefore = word << 2;
         char = chartemp - charsbefore;
-        addrin = word;
+        AddrB = word;
         if (char == 0)
-            code = dataout[7:0];
+            code = DoutB[7:0];
         else if (char == 1)
-            code = dataout[15:8];
+            code = DoutB[15:8];
         else if (char == 2)
-            code = dataout[23:16];
+            code = DoutB[23:16];
         else
-            code = dataout[31:24];
+            code = DoutB[31:24];
     end
 
 //clocking data out of BRAM for drawing SHOULDNT matter since vga controller runs at 25 mhz anyway
