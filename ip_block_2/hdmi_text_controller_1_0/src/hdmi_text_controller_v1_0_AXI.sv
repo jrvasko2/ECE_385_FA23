@@ -398,25 +398,28 @@ logic [C_S_AXI_DATA_WIDTH - 1:0] controlreg;
 logic wea;
 
 logic [C_S_AXI_DATA_WIDTH - 1:0] dincontrol, dina, douta;
-logic [C_S_AXI_ADDR_WIDTH - 3:0] addr;
-assign addr = axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+logic [C_S_AXI_ADDR_WIDTH - 3:0] addrr;
+logic [C_S_AXI_ADDR_WIDTH - 3:0] addrw, addr;
+assign addrr = S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+assign addrw = S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
 
-
-always_comb
-begin
-    if (addr == 'd600)
-        reg_data_out <= controlreg;
-    else
-        reg_data_out <= douta;
-end
 
 always_comb
 begin
     wea = 1'b0;
-    if (slv_reg_wren && addr == 'd600)
+    addr = 32'b0;
+    reg_data_out = 32'b0;
+    if (axi_awready && axi_wready && addrw == 'd600)
         controlreg = dincontrol;
-    else if (slv_reg_wren && addr < 'd600) begin
-    wea = 1'b1;
+    else if (axi_awready && axi_wready && addrw < 'd600) begin
+        wea = 1'b1;
+        addr = addrw;
+    end
+    else if (addrr == 'd600 && S_AXI_ARVALID)
+        reg_data_out = controlreg;
+    else if (S_AXI_ARVALID && addrr < 'd600) begin
+        reg_data_out = douta;
+        addr = addrr;
     end
 end
 
