@@ -146,6 +146,13 @@ logic [C_S_AXI_DATA_WIDTH-1:0]	 reg_data_out;
 integer	 byte_index;
 logic	 aw_en;
 
+logic [(C_S_AXI_DATA_WIDTH/4)-1:0]wea;
+logic [C_S_AXI_DATA_WIDTH - 1:0] controlreg;
+
+logic [C_S_AXI_DATA_WIDTH - 1:0] dincontrol, dina, douta;
+logic [C_S_AXI_ADDR_WIDTH - 3:0] addr;
+logic [1:0] counter;
+
 // I/O Connections assignments
 
 assign S_AXI_AWREADY	= axi_awready;
@@ -170,24 +177,38 @@ begin
     end 
   else
     begin    
-      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en)
+      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
         begin
           // slave is ready to accept write address when 
           // there is a valid write address and write data
           // on the write address and data bus. This design 
           // expects no outstanding transactions. 
+          controlreg <= dincontrol;
           axi_awready <= 1'b1;
           aw_en <= 1'b0;
         end
-        else if (S_AXI_BREADY && axi_bvalid)
+      else if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)
+        begin
+            wea <= S_AXI_WSTRB;
+            dina <= S_AXI_WDATA;
+            counter <= counter + 1;
+            if (counter == 2'b10)
+            begin
+                aw_en <= 1'b0;
+                axi_awready <= 1'b1;
+                wea <= 4'b0;
+                counter <= 2'b00;
+            end
+        end
+      else if (S_AXI_BREADY && axi_bvalid)
             begin
               aw_en <= 1'b1;
               axi_awready <= 1'b0;
             end
-      else           
-        begin
-          axi_awready <= 1'b0;
-        end
+       else 
+            begin
+                axi_awready <= 1'b0;
+            end
     end 
 end       
 
@@ -224,7 +245,7 @@ begin
     end 
   else
     begin    
-      if (~axi_wready && S_AXI_WVALID && S_AXI_AWVALID && aw_en )
+      if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
         begin
           // slave is ready to accept write data when 
           // there is a valid write address and write data
@@ -232,6 +253,11 @@ begin
           // expects no outstanding transactions. 
           axi_wready <= 1'b1;
         end
+      else if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin 
+          if (counter == 2'b10) begin
+                axi_wready <= 1'b1;
+          end
+       end
       else
         begin
           axi_wready <= 1'b0;
@@ -394,32 +420,26 @@ begin
 end    
 
 // Add user logic here
-logic [C_S_AXI_DATA_WIDTH - 1:0] controlreg;
-logic wea;
-
-logic [C_S_AXI_DATA_WIDTH - 1:0] dincontrol, dina, douta;
-logic [C_S_AXI_ADDR_WIDTH - 3:0] addrr;
-logic [C_S_AXI_ADDR_WIDTH - 3:0] addrw, addr;
-assign addrr = S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
-assign addrw = S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+//assign addrr = S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+//assign addrw = S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
 
 
 always_comb
 begin
-    wea = 1'b0;
     addr = 32'b0;
     reg_data_out = 32'b0;
-    if (axi_awready && axi_wready && addrw == 'd600)
+    /*if (S_AXI_WVALID && S_AXI_AWVALID && ~axi_awready && ~axi_wready && (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)) begin
         controlreg = dincontrol;
-    else if (axi_awready && axi_wready && addrw < 'd600) begin
-        wea = 1'b1;
-        addr = addrw;
+        controlregwrite = 1'b1;
+    end*/
+    if (S_AXI_WVALID && S_AXI_AWVALID && ~axi_awready && ~axi_wready && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin
+        addr = axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
     end
-    else if (addrr == 'd600 && S_AXI_ARVALID)
+    else if (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600 && S_AXI_ARVALID)
         reg_data_out = controlreg;
-    else if (S_AXI_ARVALID && addrr < 'd600) begin
+    else if (S_AXI_ARVALID && (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)) begin
         reg_data_out = douta;
-        addr = addrr;
+        addr = axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
     end
 end
 
@@ -427,36 +447,55 @@ assign control = controlreg;
 
 always_comb
 begin
+    /*if (counter == 2'b01)
+        begin
+        if (S_AXI_WSTRB[0] == 1'b1) begin
+            dina [7:0] = S_AXI_WDATA[7:0];
+        end
+        else begin
+            dina[7:0] = douta[7:0];
+        end
+        if (S_AXI_WSTRB[1] == 1'b1) begin
+            dina [15:8] = S_AXI_WDATA[15:8];
+        end
+        else begin
+            dina[15:8] = douta[15:8];    
+        end
+        if (S_AXI_WSTRB[2] == 1'b1) begin
+            dina [23:16] = S_AXI_WDATA[23:16];
+        end
+        else begin
+            dina[23:16] = douta[23:16];
+        end
+        if (S_AXI_WSTRB[3] == 1'b1) begin
+            dina [31:24] = S_AXI_WDATA[31:24];
+        end
+        else begin
+            dina[31:24] = douta[31:24];
+        end
+    end*/
     if (S_AXI_WSTRB[0] == 1'b1) begin
-        dina [7:0] = S_AXI_WDATA[7:0];
         dincontrol[7:0] = S_AXI_WDATA[7:0];
         end
     else begin
-        dina[7:0] = douta[7:0];
         dincontrol[7:0] = controlreg[7:0];
         end
     if (S_AXI_WSTRB[1] == 1'b1) begin
-        dina [15:8] = S_AXI_WDATA[15:8];
         dincontrol[15:8] = S_AXI_WDATA[15:8];
         end
     else begin
-        dina[15:8] = douta[15:8];
         dincontrol[15:8] = controlreg[15:8];
         end
     if (S_AXI_WSTRB[2] == 1'b1) begin
-        dina [23:16] = S_AXI_WDATA[23:16];
         dincontrol[23:16] = S_AXI_WDATA[23:16];
         end
     else begin
-        dina[23:16] = douta[23:16];
         dincontrol[23:16] = controlreg[23:16];
         end
     if (S_AXI_WSTRB[3] == 1'b1) begin
-        dina [31:24] = S_AXI_WDATA[31:24];
         dincontrol[31:24] = S_AXI_WDATA[31:24];
         end
     else begin
-        dina[31:24] = douta[31:24];
         dincontrol[31:24] = controlreg[31:24];
         end
 end
