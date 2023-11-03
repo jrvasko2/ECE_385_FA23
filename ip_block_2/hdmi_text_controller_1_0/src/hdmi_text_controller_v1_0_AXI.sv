@@ -144,14 +144,13 @@ logic	 slv_reg_rden;
 logic	 slv_reg_wren;
 logic [C_S_AXI_DATA_WIDTH-1:0]	 reg_data_out;
 integer	 byte_index;
-logic	 aw_en;
 
 logic [(C_S_AXI_DATA_WIDTH/4)-1:0] wea;
 logic [C_S_AXI_DATA_WIDTH - 1:0] controlreg;
 
 logic [C_S_AXI_DATA_WIDTH - 1:0] dincontrol, dina, douta;
-logic [C_S_AXI_ADDR_WIDTH - 3:0] addr;
-logic [1:0] counter;
+logic [C_S_AXI_ADDR_WIDTH - 3:0] addr, addrw, addrr;
+logic [1:0] counterw, counterr;
 
 // I/O Connections assignments
 
@@ -173,11 +172,10 @@ begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
       axi_awready <= 1'b0;
-      aw_en <= 1'b1;
     end 
   else
     begin    
-      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
+      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
         begin
           // slave is ready to accept write address when 
           // there is a valid write address and write data
@@ -185,24 +183,23 @@ begin
           // expects no outstanding transactions. 
           controlreg <= dincontrol;
           axi_awready <= 1'b1;
-          aw_en <= 1'b0;
         end
-      else if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)
+      else if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)
         begin
             wea <= S_AXI_WSTRB;
             dina <= S_AXI_WDATA;
-            counter <= counter + 1;
-            if (counter == 2'b10)
+            addrw <= S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+            counterw <= counterw + 1;
+            if (counterw == 2'b10)
             begin
-                aw_en <= 1'b0;
                 axi_awready <= 1'b1;
                 wea <= 4'b0;
-                counter <= 2'b00;
+                addrw <= 10'b0;
+                counterw <= 2'b00;
             end
         end
       else if (S_AXI_BREADY && axi_bvalid)
             begin
-              aw_en <= 1'b1;
               axi_awready <= 1'b0;
             end
        else 
@@ -224,7 +221,7 @@ begin
     end 
   else
     begin    
-      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en)
+      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID)
         begin
           // Write Address latching 
           axi_awaddr <= S_AXI_AWADDR;
@@ -245,7 +242,7 @@ begin
     end 
   else
     begin    
-      if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
+      if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
         begin
           // slave is ready to accept write data when 
           // there is a valid write address and write data
@@ -253,8 +250,8 @@ begin
           // expects no outstanding transactions. 
           axi_wready <= 1'b1;
         end
-      else if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin 
-          if (counter == 2'b10) begin
+      else if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin 
+          if (counterw == 2'b10) begin
                 axi_wready <= 1'b1;
           end
        end
@@ -319,16 +316,30 @@ begin
   if ( S_AXI_ARESETN == 1'b0 )
     begin
       axi_arready <= 1'b0;
-      axi_araddr  <= 32'b0;
+      axi_araddr  <= 10'b0;
     end 
   else
     begin    
-      if (~axi_arready && S_AXI_ARVALID)
+      if (~axi_arready && S_AXI_ARVALID && S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
         begin
+          reg_data_out <= controlreg;
           // indicates that the slave has acceped the valid read address
           axi_arready <= 1'b1;
           // Read address latching
           axi_araddr  <= S_AXI_ARADDR;
+        end
+      else if (~axi_arready && S_AXI_ARVALID && S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)
+        begin
+            reg_data_out <= douta;
+            addrr <= S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+            counterr <= counterr + 1;
+            axi_araddr  <= S_AXI_ARADDR;
+            if (counterr == 2'b10)
+                begin
+                    addrr <= 10'b0;
+                    counterr <= 2'b00;
+                    axi_arready <= 1'b1;
+                end
         end
       else
         begin
@@ -397,29 +408,17 @@ begin
     end
 end    
 
+always_comb
+    begin
+        addr = 32'b0;
+        if (addrw)
+            addr = addrw;
+        else if (addrr)
+            addr = addrr;
+    end
 // Add user logic here
 //assign addrr = S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
 //assign addrw = S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
-
-
-always_comb
-begin
-    addr = 10'b0;
-    reg_data_out = 32'b0;
-    /*if (S_AXI_WVALID && S_AXI_AWVALID && ~axi_awready && ~axi_wready && (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)) begin
-        controlreg = dincontrol;
-        controlregwrite = 1'b1;
-    end*/
-    if (S_AXI_WVALID && S_AXI_AWVALID && ~axi_awready && ~axi_wready && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin
-        addr = S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
-    end
-    else if (S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600 && S_AXI_ARVALID)
-        reg_data_out = controlreg;
-    else if (S_AXI_ARVALID && (S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)) begin
-        reg_data_out = douta;
-        addr = S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
-    end
-end
 
 assign control = controlreg;
 
