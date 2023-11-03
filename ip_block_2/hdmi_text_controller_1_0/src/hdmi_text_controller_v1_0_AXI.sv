@@ -146,7 +146,7 @@ logic [C_S_AXI_DATA_WIDTH-1:0]	 reg_data_out;
 integer	 byte_index;
 logic	 aw_en;
 
-logic [(C_S_AXI_DATA_WIDTH/4)-1:0]wea;
+logic [(C_S_AXI_DATA_WIDTH/4)-1:0] wea;
 logic [C_S_AXI_DATA_WIDTH - 1:0] controlreg;
 
 logic [C_S_AXI_DATA_WIDTH - 1:0] dincontrol, dina, douta;
@@ -177,7 +177,7 @@ begin
     end 
   else
     begin    
-      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
+      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
         begin
           // slave is ready to accept write address when 
           // there is a valid write address and write data
@@ -187,7 +187,7 @@ begin
           axi_awready <= 1'b1;
           aw_en <= 1'b0;
         end
-      else if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)
+      else if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)
         begin
             wea <= S_AXI_WSTRB;
             dina <= S_AXI_WDATA;
@@ -245,7 +245,7 @@ begin
     end 
   else
     begin    
-      if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
+      if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
         begin
           // slave is ready to accept write data when 
           // there is a valid write address and write data
@@ -253,7 +253,7 @@ begin
           // expects no outstanding transactions. 
           axi_wready <= 1'b1;
         end
-      else if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin 
+      else if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && aw_en && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin 
           if (counter == 2'b10) begin
                 axi_wready <= 1'b1;
           end
@@ -273,28 +273,6 @@ end
 // Slave register write enable is asserted when valid address and data are available
 // and the slave is ready to accept the write address and write data.
 assign slv_reg_wren = axi_wready && S_AXI_WVALID && axi_awready && S_AXI_AWVALID;
-
-/*always_ff @( posedge S_AXI_ACLK )
-begin
-  if ( S_AXI_ARESETN == 1'b0 )
-    begin
-        for (integer i = 0; i < reg_number * 4; i++)
-        begin
-           slv_regs[i] <= 0;
-        end
-    end
-  else begin
-    if (slv_reg_wren)
-      begin
-        for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
-          if ( S_AXI_WSTRB[byte_index] == 1 ) begin
-            // Respective byte enables are asserted as per write strobes, note the use of the index part select operator
-			// '+:', you will need to understand how this operator works.
-            slv_regs[axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]][(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-          end  
-      end
-  end
-end*/
 
 // Implement write response logic generation
 // The write response and response valid signals are asserted by the slave 
@@ -426,20 +404,20 @@ end
 
 always_comb
 begin
-    addr = 32'b0;
+    addr = 10'b0;
     reg_data_out = 32'b0;
     /*if (S_AXI_WVALID && S_AXI_AWVALID && ~axi_awready && ~axi_wready && (axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)) begin
         controlreg = dincontrol;
         controlregwrite = 1'b1;
     end*/
-    if (S_AXI_WVALID && S_AXI_AWVALID && ~axi_awready && ~axi_wready && axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin
-        addr = axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+    if (S_AXI_WVALID && S_AXI_AWVALID && ~axi_awready && ~axi_wready && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin
+        addr = S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
     end
-    else if (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600 && S_AXI_ARVALID)
+    else if (S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600 && S_AXI_ARVALID)
         reg_data_out = controlreg;
-    else if (S_AXI_ARVALID && (axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)) begin
+    else if (S_AXI_ARVALID && (S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)) begin
         reg_data_out = douta;
-        addr = axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
+        addr = S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
     end
 end
 
