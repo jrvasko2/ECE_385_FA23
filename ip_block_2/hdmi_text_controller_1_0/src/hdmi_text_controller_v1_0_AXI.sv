@@ -27,7 +27,6 @@
 module hdmi_text_controller_v1_0_AXI #
 (
     // Users to add parameters here
-    parameter integer reg_number = 601,
 
     // User parameters ends
     // Do not modify the parameters beyond this line
@@ -35,13 +34,13 @@ module hdmi_text_controller_v1_0_AXI #
     // Width of S_AXI data bus
     parameter integer C_S_AXI_DATA_WIDTH	= 32,
     // Width of S_AXI address bus
-    parameter integer C_S_AXI_ADDR_WIDTH	= 12
+    parameter integer C_S_AXI_ADDR_WIDTH	= 14
 )
 (
     // Users to add ports here
     input logic [C_S_AXI_ADDR_WIDTH - 3:0] addrin,
     output logic [C_S_AXI_DATA_WIDTH - 1:0] dataout,
-    output logic [C_S_AXI_DATA_WIDTH - 1:0] control,
+    output logic [C_S_AXI_DATA_WIDTH - 1:0] palette1, palette2, palette3, palette4, palette5, palette6, palette7, palette8,
 
     // User ports ends
     // Do not modify the ports beyond this line
@@ -126,7 +125,7 @@ logic  	axi_rvalid;
 // ADDR_LSB = 2 for 32 bits (n downto 2)
 // ADDR_LSB = 3 for 64 bits (n downto 3)
 localparam integer ADDR_LSB = (C_S_AXI_DATA_WIDTH/32) + 1;
-localparam integer OPT_MEM_ADDR_BITS = 9;
+localparam integer OPT_MEM_ADDR_BITS = 11;
 //----------------------------------------------
 //-- Signals for user logic register space example
 //------------------------------------------------
@@ -146,7 +145,7 @@ logic [C_S_AXI_DATA_WIDTH-1:0]	 reg_data_out;
 integer	 byte_index;
 
 logic [(C_S_AXI_DATA_WIDTH/4)-1:0] wea;
-logic [C_S_AXI_DATA_WIDTH - 1:0] controlreg;
+logic [C_S_AXI_DATA_WIDTH - 1:0] palettereg[8];
 
 logic [C_S_AXI_DATA_WIDTH - 1:0] dincontrol, dina, douta;
 logic [C_S_AXI_ADDR_WIDTH - 3:0] addr, addrw, addrr;
@@ -175,16 +174,16 @@ begin
     end 
   else
     begin    
-      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
+      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS])
         begin
           // slave is ready to accept write address when 
           // there is a valid write address and write data
           // on the write address and data bus. This design 
           // expects no outstanding transactions. 
-          controlreg <= dincontrol;
+          palettereg[S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] & 12'b011111111111] <= dincontrol;
           axi_awready <= 1'b1;
         end
-      else if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)
+      else if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID && ~S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS])
         begin
             wea <= S_AXI_WSTRB;
             dina <= S_AXI_WDATA;
@@ -242,7 +241,7 @@ begin
     end 
   else
     begin    
-      if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
+      if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS])
         begin
           // slave is ready to accept write data when 
           // there is a valid write address and write data
@@ -250,7 +249,7 @@ begin
           // expects no outstanding transactions. 
           axi_wready <= 1'b1;
         end
-      else if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600) begin 
+      else if (~axi_wready && S_AXI_AWVALID && S_AXI_WVALID && ~S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS]) begin 
           if (counterw == 2'b10) begin
                 axi_wready <= 1'b1;
           end
@@ -320,15 +319,15 @@ begin
     end 
   else
     begin    
-      if (~axi_arready && S_AXI_ARVALID && S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] == 'd600)
+      if (~axi_arready && S_AXI_ARVALID && S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS])
         begin
-          reg_data_out <= controlreg;
+          reg_data_out <= palettereg[S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] & 12'b011111111111];
           // indicates that the slave has acceped the valid read address
           axi_arready <= 1'b1;
           // Read address latching
           axi_araddr  <= S_AXI_ARADDR;
         end
-      else if (~axi_arready && S_AXI_ARVALID && S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] < 'd600)
+      else if (~axi_arready && S_AXI_ARVALID && ~S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS])
         begin
             reg_data_out <= douta;
             addrr <= S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
@@ -420,7 +419,14 @@ always_comb
 //assign addrr = S_AXI_ARADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
 //assign addrw = S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB];
 
-assign control = controlreg;
+assign palette1 = palettereg[0];
+assign palette2 = palettereg[1];
+assign palette3 = palettereg[2];
+assign palette4 = palettereg[3];
+assign palette5 = palettereg[4];
+assign palette6 = palettereg[5];
+assign palette7 = palettereg[6];
+assign palette8 = palettereg[7];
 
 always_comb
 begin
@@ -451,30 +457,33 @@ begin
             dina[31:24] = douta[31:24];
         end
     end*/
-    if (S_AXI_WSTRB[0] == 1'b1) begin
-        dincontrol[7:0] = S_AXI_WDATA[7:0];
-        end
-    else begin
-        dincontrol[7:0] = controlreg[7:0];
-        end
-    if (S_AXI_WSTRB[1] == 1'b1) begin
-        dincontrol[15:8] = S_AXI_WDATA[15:8];
-        end
-    else begin
-        dincontrol[15:8] = controlreg[15:8];
-        end
-    if (S_AXI_WSTRB[2] == 1'b1) begin
-        dincontrol[23:16] = S_AXI_WDATA[23:16];
-        end
-    else begin
-        dincontrol[23:16] = controlreg[23:16];
-        end
-    if (S_AXI_WSTRB[3] == 1'b1) begin
-        dincontrol[31:24] = S_AXI_WDATA[31:24];
-        end
-    else begin
-        dincontrol[31:24] = controlreg[31:24];
-        end
+    dincontrol = 32'b0;
+    if (S_AXI_AWVALID && S_AXI_WVALID) begin
+        if (S_AXI_WSTRB[0] == 1'b1) begin
+            dincontrol[7:0] = S_AXI_WDATA[7:0];
+            end
+        else begin
+            dincontrol[7:0] = palettereg[S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] & 12'b011111111111][7:0];
+            end
+        if (S_AXI_WSTRB[1] == 1'b1) begin
+            dincontrol[15:8] = S_AXI_WDATA[15:8];
+            end
+        else begin
+            dincontrol[15:8] = palettereg[S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] & 12'b011111111111][15:8];
+            end
+        if (S_AXI_WSTRB[2] == 1'b1) begin
+            dincontrol[23:16] = S_AXI_WDATA[23:16];
+            end
+        else begin
+            dincontrol[23:16] = palettereg[S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] & 12'b011111111111][23:16];
+            end
+        if (S_AXI_WSTRB[3] == 1'b1) begin
+            dincontrol[31:24] = S_AXI_WDATA[31:24];
+            end
+        else begin
+            dincontrol[31:24] = palettereg[S_AXI_AWADDR[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] & 12'b011111111111][31:24];
+            end
+    end
 end
 
 

@@ -10,7 +10,7 @@ module hdmi_text_controller_v1_0 #
 
     // Parameters of Axi Slave Bus Interface S00_AXI
     parameter integer C_AXI_DATA_WIDTH    = 32,
-    parameter integer C_AXI_ADDR_WIDTH    = 12 //note that we changed this from 4 in the provided template
+    parameter integer C_AXI_ADDR_WIDTH    = 14 //note that we changed this from 4 in the provided template
 )
 (
     // Users to add ports here
@@ -60,8 +60,9 @@ logic [3:0] red, green, blue;
 
 logic [C_AXI_DATA_WIDTH - 1:0] dataout;
 logic [C_AXI_ADDR_WIDTH - 3:0] addrin;
-logic [7:0] code;
+logic [15:0] code;
 logic [C_AXI_DATA_WIDTH - 1:0] control;
+logic [C_AXI_DATA_WIDTH - 1:0] palette1, palette2, palette3, palette4, palette5, palette6, palette7, palette8;
 
 logic reset_ah;
 assign reset_ah = axi_aresetn;
@@ -95,7 +96,14 @@ hdmi_text_controller_v1_0_AXI # (
     .S_AXI_RREADY(axi_rready),
     .addrin(addrin),
     .dataout(dataout),
-    .control(control)
+    .palette1(palette1),
+    .palette2(palette2),
+    .palette3(palette3),
+    .palette4(palette4),
+    .palette5(palette5),
+    .palette6(palette6),
+    .palette7(palette7),
+    .palette8(palette8)
 );
 
 
@@ -157,7 +165,14 @@ hdmi_text_controller_v1_0_AXI # (
         .DrawX(drawX),
         .DrawY(drawY),
         .code(code),
-        .control(control),
+        .palette1(palette1),
+        .palette2(palette2),
+        .palette3(palette3),
+        .palette4(palette4),
+        .palette5(palette5),
+        .palette6(palette6),
+        .palette7(palette7),
+        .palette8(palette8),
         .Red(red),
         .Green(green),
         .Blue(blue)
@@ -169,19 +184,15 @@ hdmi_text_controller_v1_0_AXI # (
     always_comb
     begin
         chartemp = (drawX >> 3) + ((drawY >> 4) * 80);
-        word = chartemp >> 2;
+        word = chartemp >> 1;
         //char = (drawX % 32) >> 3;
-        charsbefore = word << 2;
+        charsbefore = word << 1;
         char = chartemp - charsbefore;
         addrin = word;
         if (char == 0)
-            code = dataout[7:0];
-        else if (char == 1)
-            code = dataout[15:8];
-        else if (char == 2)
-            code = dataout[23:16];
+            code = dataout[15:0];
         else
-            code = dataout[31:24];
+            code = dataout[31:16];
     end
 
 // User logic ends
