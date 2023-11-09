@@ -1,0 +1,15 @@
+#include <stdio.h>
+#include "xparameters.h"
+#include <xil_types.h>
+//#include "platform.h"
+
+
+volatile uint32_t* sw_gpio_data = (uint32_t*)XPAR_AXI_GPIO_1_BASEADDR;
+
+
+int main() {
+	//init_platform();
+	xil_printf("%x\n", sw_gpio_data);
+	//cleanup_platform();
+	return 0;
+}

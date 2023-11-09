@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include "xparameters.h"
+#include <xil_types.h>
+#include "platform.h"
+#include "MicroFlow.h"
+
+
+volatile uint32_t* sw_gpio_data = (uint32_t*)XPAR_AXI_GPIO_1_BASEADDR;
+
+
+int main() {
+	init_platform();
+	int topology[] = {2, 2, 2, 1};
+	double weights[] = {6.5388827, 2.3116155, 6.5393276, 2.311627, -2.8204367, -2.5849876, 3.4741454, -1.7074409, -2.5904362, -0.8814233};
+	double biases[] = {-1.4674287, -3.13011, 0.36903697, -0.27291444, 1.5541532};
+	double inputs[] = {0, 0};
+	double output[1] = {};
+	int activations[] = {SIGMOID, SIGMOID, SIGMOID}; //Activations for each layer excluding the input layer
+	int layers = 4;
+
+	MicroMLP mlp(layers, topology, weights, biases, SIGMOID); //Create the Multi-Layer Perceptron
+  //MicroMLP mlp(layers, topology, weights, biases, activations); //This is also valid.
+
+	mlp.feedforward(inputs, output); //Run a feedforward pass
+	xil_printf("Inputs: ");
+	xil_printf("%g", inputs[0]);
+	xil_printf(", ");
+	xil_printf("%g\n", inputs[1]);
+	xil_printf("Neural Network Output: %g\n", output[0]);
+
+	inputs[0] = 1;
+	mlp.feedforward(inputs, output);
+	xil_printf("Inputs: ");
+	xil_printf("%e", inputs[0]);
+	xil_printf(", ");
+	xil_printf("%e\n", inputs[1]);
+	xil_printf("Neural Network Output: %e\n", output[0]);
+
+	inputs[1] = 1;
+	mlp.feedforward(inputs, output);
+	xil_printf("Inputs: ");
+	xil_printf("%f", inputs[0]);
+	xil_printf(", ");
+	xil_printf("%f\n", inputs[1]);
+	xil_printf("Neural Network Output: %f\n", output[0]);
+
+	inputs[0] = 0;
+	mlp.feedforward(inputs, output);
+	xil_printf("Inputs: ");
+	xil_printf("%f", inputs[0]);
+	xil_printf(", ");
+	xil_printf("%f\n", inputs[1]);
+	xil_printf("Neural Network Output: %f\n", output[0]);
+	cleanup_platform();
+	return 0;
+}

@@ -1,0 +1,525 @@
+18:00:52 DEBUG : Logs will be stored at 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/IDE.log'.
+18:00:56 INFO  : Launching XSCT server: xsct.bat -n  -interactive C:\Users\18472\385_xilinx_files\SoC_MicroBlaze\workspacefinal\temp_xsdb_launch_script.tcl
+18:00:56 INFO  : Platform repository initialization has completed.
+18:00:56 INFO  : Registering command handlers for Vitis TCF services
+18:00:59 INFO  : XSCT server has started successfully.
+18:00:59 INFO  : plnx-install-location is set to ''
+18:00:59 INFO  : Successfully done setting XSCT server connection channel  
+18:00:59 INFO  : Successfully done setting workspace for the tool. 
+18:00:59 INFO  : Successfully done query RDI_DATADIR 
+18:03:23 INFO  : Result from executing command 'getProjects': mb_intro_top
+18:03:23 INFO  : Result from executing command 'getPlatforms': 
+18:03:23 WARN  : An unexpected exception occurred in the module 'platform project logging'
+18:03:23 INFO  : Platform 'mb_intro_top' is added to custom repositories.
+18:03:25 INFO  : Platform 'mb_intro_top' is added to custom repositories.
+18:08:16 INFO  : Result from executing command 'getProjects': mb_intro_top
+18:08:16 INFO  : Result from executing command 'getPlatforms': mb_intro_top|C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/mb_intro_top.xpfm
+18:08:17 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:08:40 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:09:34 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:09:54 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:10:14 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:10:51 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:11:18 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:16:33 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:19:04 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:29:28 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+18:30:10 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:30:10 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+18:30:10 INFO  : 'jtag frequency' command is executed.
+18:30:10 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+18:30:11 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+18:30:12 INFO  : Context for processor 'microblaze_0' is selected.
+18:30:12 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+18:30:12 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+18:30:12 INFO  : Context for processor 'microblaze_0' is selected.
+18:30:12 INFO  : System reset is completed.
+18:30:15 INFO  : 'after 3000' command is executed.
+18:30:15 INFO  : Context for processor 'microblaze_0' is selected.
+18:30:15 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+18:30:15 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+18:30:15 INFO  : Context for processor 'microblaze_0' is selected.
+18:30:15 INFO  : 'con' command is executed.
+18:30:15 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+18:30:15 INFO  : Disconnected from the channel tcfchan#2.
+18:30:40 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:30:40 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+18:30:40 INFO  : 'jtag frequency' command is executed.
+18:30:40 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+18:30:41 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+18:30:41 INFO  : Context for processor 'microblaze_0' is selected.
+18:30:41 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+18:30:41 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+18:30:41 INFO  : Context for processor 'microblaze_0' is selected.
+18:30:41 INFO  : System reset is completed.
+18:30:44 INFO  : 'after 3000' command is executed.
+18:30:44 INFO  : Context for processor 'microblaze_0' is selected.
+18:30:45 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+18:30:45 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+18:30:45 INFO  : Context for processor 'microblaze_0' is selected.
+18:30:45 INFO  : 'con' command is executed.
+18:30:45 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+18:30:45 INFO  : Disconnected from the channel tcfchan#3.
+18:31:05 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:31:05 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+18:31:05 INFO  : 'jtag frequency' command is executed.
+18:31:05 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+18:31:06 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+18:31:07 INFO  : Context for processor 'microblaze_0' is selected.
+18:31:07 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+18:31:07 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+18:31:07 INFO  : Context for processor 'microblaze_0' is selected.
+18:31:07 INFO  : System reset is completed.
+18:31:10 INFO  : 'after 3000' command is executed.
+18:31:10 INFO  : Context for processor 'microblaze_0' is selected.
+18:31:10 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+18:31:10 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+18:31:10 INFO  : Context for processor 'microblaze_0' is selected.
+18:31:10 INFO  : 'con' command is executed.
+18:31:10 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+18:31:10 INFO  : Disconnected from the channel tcfchan#4.
+12:53:59 DEBUG : Logs will be stored at 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/IDE.log'.
+12:54:00 INFO  : Launching XSCT server: xsct.bat -n  -interactive C:\Users\18472\385_xilinx_files\SoC_MicroBlaze\workspacefinal\temp_xsdb_launch_script.tcl
+12:54:04 INFO  : Registering command handlers for Vitis TCF services
+12:54:04 INFO  : Platform repository initialization has completed.
+12:54:06 INFO  : XSCT server has started successfully.
+12:54:06 INFO  : Successfully done setting XSCT server connection channel  
+12:54:06 INFO  : plnx-install-location is set to ''
+12:54:13 INFO  : Successfully done setting workspace for the tool. 
+12:54:14 INFO  : Successfully done query RDI_DATADIR 
+13:05:11 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+13:06:20 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+13:09:05 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+13:09:31 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:03:48 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:03:49 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:03:49 INFO  : 'jtag frequency' command is executed.
+21:03:49 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:03:50 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:03:50 INFO  : Context for processor 'microblaze_0' is selected.
+21:03:50 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:03:50 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:03:50 INFO  : Context for processor 'microblaze_0' is selected.
+21:03:50 INFO  : System reset is completed.
+21:03:53 INFO  : 'after 3000' command is executed.
+21:03:53 INFO  : Context for processor 'microblaze_0' is selected.
+21:03:53 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:03:53 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:03:54 INFO  : Context for processor 'microblaze_0' is selected.
+21:03:54 INFO  : 'con' command is executed.
+21:03:54 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+21:03:54 INFO  : Disconnected from the channel tcfchan#1.
+21:04:29 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:04:40 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:04:40 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:04:40 INFO  : 'jtag frequency' command is executed.
+21:04:40 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:04:42 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:04:42 INFO  : Context for processor 'microblaze_0' is selected.
+21:04:42 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:04:42 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:04:42 INFO  : Context for processor 'microblaze_0' is selected.
+21:04:42 INFO  : System reset is completed.
+21:04:45 INFO  : 'after 3000' command is executed.
+21:04:45 INFO  : Context for processor 'microblaze_0' is selected.
+21:04:45 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:04:45 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:04:45 INFO  : Context for processor 'microblaze_0' is selected.
+21:04:45 INFO  : 'con' command is executed.
+21:04:45 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+21:04:45 INFO  : Disconnected from the channel tcfchan#2.
+21:06:09 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:06:15 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:06:16 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:06:16 INFO  : 'jtag frequency' command is executed.
+21:06:16 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:06:17 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:06:17 INFO  : Context for processor 'microblaze_0' is selected.
+21:06:17 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:06:17 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:06:17 INFO  : Context for processor 'microblaze_0' is selected.
+21:06:17 INFO  : System reset is completed.
+21:06:20 INFO  : 'after 3000' command is executed.
+21:06:20 INFO  : Context for processor 'microblaze_0' is selected.
+21:06:20 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:06:20 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:06:20 INFO  : Context for processor 'microblaze_0' is selected.
+21:06:20 INFO  : 'con' command is executed.
+21:06:20 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+21:06:20 INFO  : Disconnected from the channel tcfchan#3.
+21:06:52 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:06:58 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:06:58 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:06:58 INFO  : 'jtag frequency' command is executed.
+21:06:58 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:07:00 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:07:00 INFO  : Context for processor 'microblaze_0' is selected.
+21:07:00 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:07:00 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:07:00 INFO  : Context for processor 'microblaze_0' is selected.
+21:07:00 INFO  : System reset is completed.
+21:07:03 INFO  : 'after 3000' command is executed.
+21:07:03 INFO  : Context for processor 'microblaze_0' is selected.
+21:07:03 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:07:03 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:07:03 INFO  : Context for processor 'microblaze_0' is selected.
+21:07:03 INFO  : 'con' command is executed.
+21:07:03 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+21:07:03 INFO  : Disconnected from the channel tcfchan#4.
+21:07:30 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:07:37 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:07:37 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:07:37 INFO  : 'jtag frequency' command is executed.
+21:07:37 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:07:39 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:07:39 INFO  : Context for processor 'microblaze_0' is selected.
+21:07:39 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:07:39 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:07:39 INFO  : Context for processor 'microblaze_0' is selected.
+21:07:39 INFO  : System reset is completed.
+21:07:42 INFO  : 'after 3000' command is executed.
+21:07:42 INFO  : Context for processor 'microblaze_0' is selected.
+21:07:42 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:07:42 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:07:42 INFO  : Context for processor 'microblaze_0' is selected.
+21:07:42 INFO  : 'con' command is executed.
+21:07:42 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+21:07:42 INFO  : Disconnected from the channel tcfchan#5.
+21:07:53 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:08:00 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:08:00 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:08:00 INFO  : 'jtag frequency' command is executed.
+21:08:01 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:08:02 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:08:02 INFO  : Context for processor 'microblaze_0' is selected.
+21:08:02 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:08:02 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:08:02 INFO  : Context for processor 'microblaze_0' is selected.
+21:08:02 INFO  : System reset is completed.
+21:08:05 INFO  : 'after 3000' command is executed.
+21:08:05 INFO  : Context for processor 'microblaze_0' is selected.
+21:08:05 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:08:05 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:08:05 INFO  : Context for processor 'microblaze_0' is selected.
+21:08:05 INFO  : 'con' command is executed.
+21:08:05 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+21:08:05 INFO  : Disconnected from the channel tcfchan#6.
+21:09:47 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:09:47 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:09:47 INFO  : 'jtag frequency' command is executed.
+21:09:47 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:09:48 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:09:48 INFO  : Context for processor 'microblaze_0' is selected.
+21:09:49 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:09:49 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:09:49 INFO  : Context for processor 'microblaze_0' is selected.
+21:09:49 INFO  : System reset is completed.
+21:09:52 INFO  : 'after 3000' command is executed.
+21:09:52 INFO  : Context for processor 'microblaze_0' is selected.
+21:09:52 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:09:52 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:10:57 INFO  : Disconnected from the channel tcfchan#7.
+21:11:35 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:11:35 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:11:35 INFO  : 'jtag frequency' command is executed.
+21:11:35 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:11:36 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:11:36 INFO  : Context for processor 'microblaze_0' is selected.
+21:11:37 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:11:37 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:11:37 INFO  : Context for processor 'microblaze_0' is selected.
+21:11:37 INFO  : System reset is completed.
+21:11:40 INFO  : 'after 3000' command is executed.
+21:11:40 INFO  : Context for processor 'microblaze_0' is selected.
+21:11:40 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:11:40 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:15:01 INFO  : Disconnected from the channel tcfchan#8.
+21:15:16 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:15:23 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:15:23 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:15:23 INFO  : 'jtag frequency' command is executed.
+21:15:23 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:15:25 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:15:25 INFO  : Context for processor 'microblaze_0' is selected.
+21:15:25 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:15:25 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:15:25 INFO  : Context for processor 'microblaze_0' is selected.
+21:15:25 INFO  : System reset is completed.
+21:15:28 INFO  : 'after 3000' command is executed.
+21:15:28 INFO  : Context for processor 'microblaze_0' is selected.
+21:15:28 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:15:28 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:15:28 INFO  : Context for processor 'microblaze_0' is selected.
+21:15:28 INFO  : 'con' command is executed.
+21:15:28 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+21:15:28 INFO  : Disconnected from the channel tcfchan#9.
+21:15:42 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:15:49 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:15:49 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:15:49 INFO  : 'jtag frequency' command is executed.
+21:15:49 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:15:51 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:15:51 INFO  : Context for processor 'microblaze_0' is selected.
+21:15:51 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:15:51 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:15:51 INFO  : Context for processor 'microblaze_0' is selected.
+21:15:51 INFO  : System reset is completed.
+21:15:54 INFO  : 'after 3000' command is executed.
+21:15:54 INFO  : Context for processor 'microblaze_0' is selected.
+21:15:54 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:15:54 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:15:54 INFO  : Context for processor 'microblaze_0' is selected.
+21:15:54 INFO  : 'con' command is executed.
+21:15:54 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+21:15:54 INFO  : Disconnected from the channel tcfchan#10.
+21:16:32 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:19:00 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:19:16 INFO  : Checking for BSP changes to sync application flags for project 'test'...
+21:19:22 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+21:19:23 INFO  : Jtag cable 'RealDigital Boo 8874292302BAA' is selected.
+21:19:23 INFO  : 'jtag frequency' command is executed.
+21:19:23 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+21:19:24 INFO  : Device configured successfully with "C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit"
+21:19:24 INFO  : Context for processor 'microblaze_0' is selected.
+21:19:24 INFO  : Hardware design and registers information is loaded from 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+21:19:24 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+21:19:24 INFO  : Context for processor 'microblaze_0' is selected.
+21:19:24 INFO  : System reset is completed.
+21:19:27 INFO  : 'after 3000' command is executed.
+21:19:27 INFO  : Context for processor 'microblaze_0' is selected.
+21:19:27 INFO  : The application 'C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf' is downloaded to processor 'microblaze_0'.
+21:19:27 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292302BAA" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow C:/Users/18472/385_xilinx_files/SoC_MicroBlaze/workspacefinal/test/Debug/test.elf
+----------------End of Script----------------
+
+21:19:27 INFO  : Context for processor 'microblaze_0' is selected.
+21:19:27 INFO  : 'con' command is executed.
+21:19:27 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+21:19:27 INFO  : Disconnected from the channel tcfchan#11.
