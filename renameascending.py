@@ -9,9 +9,9 @@ Created on Tue Nov  7 20:11:34 2023
 
 import os
 
-os.chdir('C:/Users/jvask/OneDrive/Desktop/TESTDIR/')
+os.chdir('C:/Users/jvask/OneDrive/Desktop/VIVADO/fruit_model/Training_Data/Corn/')
 
-category = 'Banana'
+category = 'Corn'
 
 files = os.listdir()
 
